@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Focused YouTube
-// @version      1
+// @version      2
 // @author       Kervyn
 // @namespace    https://raw.githubusercontent.com/KervynH/Focused-YouTube/main/main.user.js
 // @description  Remove ads, shorts, and algorithmic suggestions on YouTube
@@ -18,20 +18,36 @@ which is licensed under is licensed under the Mozilla Public License 2.0 */
 
 
 // Config custom settings here
-const homepageSettings = {
+const SETTINGS = {
+  /// homepage settings ///
   hideEntireHomepage: true,
-  // Admissable values for redirectHomepage: 'watch-later', 'subscriptions', 'library', false
-  redirectHomepage: 'subscriptions',
+  redirectHomepage: 'wl', // Values: 'wl', 'subs', 'lib', false
   hideAllButOneRow: true,
   hideInfiniteScroll: true,
-};
+  
+  /// video settings ///
+  hideRelatedVideos: true,
+  hideChat: true,
+  disableAutoPlay: true,
+  hidePlayNextButton: true,
+  hideShorts: true,
+  redirectShortsPlayer: true,
+
+  /// misc ///
+  hideStreamedVideosOnSubs: false,
+  hideCinematicModeButton: true,
+}
 
 
 // Mark settings in the document
 const HTML = document.documentElement;
-HTML.setAttribute('hideEntireHomepage', homepageSettings.hideEntireHomepage);
-HTML.setAttribute('hideAllButOneRow', homepageSettings.hideAllButOneRow);
-HTML.setAttribute('hideInfiniteScroll', homepageSettings.hideInfiniteScroll);
+HTML.setAttribute('hideEntireHomepage', SETTINGS.hideEntireHomepage);
+HTML.setAttribute('hideAllButOneRow', SETTINGS.hideAllButOneRow);
+HTML.setAttribute('hideInfiniteScroll', SETTINGS.hideInfiniteScroll);
+HTML.setAttribute('hideRelatedVideos', SETTINGS.hideRelatedVideos);
+HTML.setAttribute('hideChat', SETTINGS.hideChat);
+HTML.setAttribute('removePlayNextButton', SETTINGS.hidePlayNextButton);
+HTML.setAttribute('hideShorts', SETTINGS.hideShorts);
 
 
 // Add remote css to remove unnecessary elements
@@ -71,9 +87,9 @@ function handleNewPage() {
 
 
 function runStaticSettings() {
-  disableAutoPlay();
-  redirectHomepage();
-  redirectShortsPlayer();
+  if (SETTINGS.redirectHomepage) redirectHomepage();
+  if (SETTINGS.redirectShortsPlayer) redirectShortsPlayer();
+  if (SETTINGS.disableAutoPlay) disableAutoPlay();
 }
 
 
@@ -89,11 +105,12 @@ function runDynamicSettings() {
   isRunning = true;
 
   handleNewPage();
+
+  if (SETTINGS.hideStreamedVideosOnSubs) hideStreamedVideosOnSubsPage();
+  if (SETTINGS.hideShorts) hideShortsVideos();
+  if (SETTINGS.hideCinematicModeButton) hideCinematicModeButton();
   unfoldPopupMenu();
-  removeStreamedVideosOnSubsPage();
-  removeShortsVideos();
   skipVideoAds();
-  removeCinematicSettingButton();
 
   frameRequested = false;
   isRunning = false;
@@ -104,14 +121,13 @@ function runDynamicSettings() {
 function redirectHomepage() {
   const onHomepage = homepageRegex.test(location.href);
   if (!onHomepage) return;
-  if (!homepageSettings.redirectHomepage) return;
-  if (homepageSettings.redirectHomepage == 'watch-later') {
+  if (SETTINGS.redirectHomepage == 'wl') {
     location.replace('https://www.youtube.com/playlist/?list=WL');
   }
-  if (homepageSettings.redirectHomepage == 'subscriptions') {
+  if (SETTINGS.redirectHomepage == 'subs') {
     location.replace('https://www.youtube.com/feed/subscriptions');
   }
-  if (homepageSettings.redirectHomepage == 'library') {
+  if (SETTINGS.redirectHomepage == 'lib') {
     location.replace('https://www.youtube.com/feed/library');
   }
 }
@@ -156,7 +172,7 @@ function disableAutoPlay() {
 }
 
 
-function removeShortsVideos() {
+function hideShortsVideos() {
   const currentUrl = location.href;
   const onSubsPage = subsRegex.test(currentUrl);
   const onResultsPage = resultsPageRegex.test(currentUrl);
@@ -227,7 +243,7 @@ function unfoldPopupMenu() {
 }
 
 
-function removeStreamedVideosOnSubsPage() {
+function hideStreamedVideosOnSubsPage() {
   const onSubsPage = subsRegex.test(location.href);
   // mobile
   if (onSubsPage) {
@@ -253,6 +269,6 @@ function removeStreamedVideosOnSubsPage() {
 }
 
 
-function removeCinematicSettingButton() {
+function hideCinematicModeButton() {
   document.querySelector('div.cinematic-setting')?.remove();
 }
