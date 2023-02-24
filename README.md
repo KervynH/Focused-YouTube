@@ -15,6 +15,10 @@ This is a userscript that reduces distractions on YouTube.
 
 With a script manager such as tampermonkey, click [here](https://raw.githubusercontent.com/KervynH/Focused-YouTube/main/main.user.js) to install.
 
+## Configure Settings
+
+To customize the userscript, change the values of the object `SETTINGS` at the start of the code. 
+
 ## Credit
 
 - [lawrencehook/remove-youtube-suggestions](https://github.com/lawrencehook/remove-youtube-suggestions)
