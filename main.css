@@ -1,0 +1,81 @@
+/* Ads */
+#masthead-ad,
+ytd-mealbar-promo-renderer,
+ytd-carousel-ad-renderer,
+.ytd-display-ad-renderer,
+ytd-ad-slot-renderer,
+div.ytp-ad-overlay-image
+
+/* General */
+a[title="Shorts"],
+ytd-reel-shelf-renderer,
+#secondary>div.circle,
+#related,
+.html5-endscreen,
+
+/* Left Bar Navigation */
+a[href="/feed/trending"],
+a[href="/feed/explore"],
+a[title="Shorts"],
+ytd-mini-guide-entry-renderer[aria-label="Shorts"],
+
+/* Homepage */
+html[hideEntireHomepage="true"] ytd-browse[page-subtype="home"], 
+html[hideEntireHomepage="true"] a:not(#logo)[href="/"],
+html[hideAllButOneRow="true"] ytd-browse[page-subtype="home"] ytd-rich-grid-renderer>div#header,
+html[hideAllButOneRow="true"] ytd-browse[page-subtype="home"] ytd-rich-grid-renderer>#contents>ytd-rich-grid-row:nth-child(n+2),
+html[hideInfiniteScroll="true"] ytd-browse[page-subtype="home"] ytd-rich-grid-renderer>#contents>ytd-continuation-item-renderer,
+
+/* Video Player - UI*/
+a.ytp-next-button,
+#chat,
+div.ytp-pause-overlay,
+.ytp-cards-teaser,
+button.ytp-button.ytp-cards-button,
+.ytp-button.ytp-miniplayer-button,
+.iv-branding.annotation-type-custom.annotation,
+
+/* Video Player - Comments */
+/* #comments,
+#comment-teaser,
+ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-comments-section"],
+ytd-comment-thread-renderer:not([timestamp_comment]),
+#author-text,
+#author-thumbnail,
+#replies.ytd-comment-thread-renderer,
+#vote-count-middle.ytd-comment-action-buttons-renderer, */
+
+/* Search Results Page */
+div.sbdd_a,
+#container.ytd-search ytd-search-pyv-renderer,
+#container.ytd-search ytd-reel-shelf-renderer,
+#container.ytd-search ytd-shelf-renderer,
+#mouseover-overlay,
+.ytd-search #contents>ytd-continuation-item-renderer,
+
+[foo=bar] {
+  display: none !important;
+}
+
+/**********
+ * Mobile *
+**********/
+
+/* Ads */
+ytm-companion-ad-renderer,
+ytm-promoted-sparkles-web-renderer,
+
+/* Homepage */
+html[hideEntireHomepage="true"] div[tab-identifier="FEwhat_to_watch"],
+
+/* Suggestions on video page */
+ytm-item-section-renderer[section-identifier="related-items"]>lazy-list,
+
+/* Navigation Bar */
+html[hideEntireHomepage="true"] ytm-pivot-bar-item-renderer:nth-child(1),
+ytm-pivot-bar-item-renderer:nth-child(2),
+ytm-chip-cloud-chip-renderer[chip-style="STYLE_EXPLORE_LAUNCHER_CHIP"],
+
+[foo=bar] {
+  display: none !important;
+}

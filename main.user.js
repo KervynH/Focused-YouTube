@@ -1,0 +1,258 @@
+// ==UserScript==
+// @name         Focused YouTube
+// @version      1
+// @author       Kervyn
+// @namespace    https://raw.githubusercontent.com/KervynH/Focused-YouTube/main/main.user.js
+// @description  Remove ads, shorts, and algorithmic suggestions on YouTube
+// @match        *://*.youtube.com/*
+// @run-at       document-end
+// @grant        GM_addStyle
+// @grant        GM_getResourceText
+// @resource     REMOTE_CSS https://raw.githubusercontent.com/KervynH/Focused-YouTube/main/main.css
+// ==/UserScript==
+
+
+/* The following code is mostly modified from
+https://github.com/lawrencehook/remove-youtube-suggestions
+which is licensed under is licensed under the Mozilla Public License 2.0 */
+
+
+// Config custom settings here
+const homepageSettings = {
+  hideEntireHomepage: true,
+  // Admissable values for redirectHomepage: 'watch-later', 'subscriptions', 'library', false
+  redirectHomepage: 'subscriptions',
+  hideAllButOneRow: true,
+  hideInfiniteScroll: true,
+};
+
+
+// Mark settings in the document
+const HTML = document.documentElement;
+HTML.setAttribute('hideEntireHomepage', homepageSettings.hideEntireHomepage);
+HTML.setAttribute('hideAllButOneRow', homepageSettings.hideAllButOneRow);
+HTML.setAttribute('hideInfiniteScroll', homepageSettings.hideInfiniteScroll);
+
+
+// Add remote css to remove unnecessary elements
+const css = GM_getResourceText("REMOTE_CSS");
+GM_addStyle(css);
+
+
+// Global constants
+const resultsPageRegex = new RegExp('.*://.*youtube\.com/results.*', 'i');
+const homepageRegex = new RegExp('.*://(www|m)\.youtube\.com(/)?$', 'i');
+const shortsRegex = new RegExp('.*://.*youtube\.com/shorts.*', 'i');
+const videoRegex = new RegExp('.*://.*youtube\.com/watch\\?v=.*', 'i');
+const subsRegex = new RegExp(/\/feed\/subscriptions$/, 'i');
+const channelRegex = new RegExp('.*://.*youtube\.com/@*', 'i');
+
+
+// Global dynamic settings variables
+let url = undefined;
+let isRunning = false;
+let frameRequested = false;
+
+
+handleNewPage();
+
+
+/////// Functions ////////
+
+function handleNewPage() {
+  // check whether url has changed
+  if (url == location.href) return;
+  url = location.href;
+  // Static settings run only once
+  runStaticSettings();
+  // Dyamic settings run periodically
+  requestRunDynamicSettings();
+}
+
+
+function runStaticSettings() {
+  disableAutoPlay();
+  redirectHomepage();
+  redirectShortsPlayer();
+}
+
+
+function requestRunDynamicSettings() {
+  if (isRunning || frameRequested) return;
+  frameRequested = true;
+  setTimeout(runDynamicSettings, 40);
+}
+
+
+function runDynamicSettings() {
+  if (isRunning) return;
+  isRunning = true;
+
+  handleNewPage();
+  unfoldPopupMenu();
+  removeStreamedVideosOnSubsPage();
+  removeShortsVideos();
+  skipVideoAds();
+  removeCinematicSettingButton();
+
+  frameRequested = false;
+  isRunning = false;
+  requestRunDynamicSettings();
+}
+
+
+function redirectHomepage() {
+  const onHomepage = homepageRegex.test(location.href);
+  if (!onHomepage) return;
+  if (!homepageSettings.redirectHomepage) return;
+  if (homepageSettings.redirectHomepage == 'watch-later') {
+    location.replace('https://www.youtube.com/playlist/?list=WL');
+  }
+  if (homepageSettings.redirectHomepage == 'subscriptions') {
+    location.replace('https://www.youtube.com/feed/subscriptions');
+  }
+  if (homepageSettings.redirectHomepage == 'library') {
+    location.replace('https://www.youtube.com/feed/library');
+  }
+}
+
+
+function redirectShortsPlayer() {
+  const currentUrl = location.href;
+  const onShorts = shortsRegex.test();
+  if (onShorts) {
+    const newUrl = currentUrl.replace('shorts', 'watch');
+    location.replace(newUrl);
+  }
+}
+
+
+function disableAutoPlay() {
+  // turn off auto play button
+  const autoplayButton = document.querySelectorAll('.ytp-autonav-toggle-button[aria-checked=true]');
+  autoplayButton?.forEach(e => {
+    if (e && e.offsetParent) {
+      e.click();
+    }
+  });
+  // turn off auto play button on mobile
+  const mAutoplayButton = document.querySelectorAll('.ytm-autonav-toggle-button-container[aria-pressed=true]');
+  mAutoplayButton?.forEach(e => {
+    if (e && e.offsetParent) {
+      e.click();
+    }
+  });
+  // disable playlist auto play
+  const existingScript = document.querySelector('script[id="disable_playlist_autoplay"]');
+  if (existingScript) return; // Avoid repeatedly injecting script in setInterval(RunDynamicSettings, 50)
+  const script = document.createElement("script");
+  script.id = 'disable_playlist_autoplay';
+  script.type = "text/javascript";
+  script.innerText = `setInterval(function() {
+      let pm = document.querySelector('yt-playlist-manager');
+      if (pm) pm.canAutoAdvance_ = false;
+    }, 100)`;
+  document.body?.appendChild(script);
+}
+
+
+function removeShortsVideos() {
+  const currentUrl = location.href;
+  const onSubsPage = subsRegex.test(currentUrl);
+  const onResultsPage = resultsPageRegex.test(currentUrl);
+  const onChannelPage = channelRegex.test(currentUrl);
+  const shortsLinks = document.querySelectorAll('a[href^="/shorts"]');
+  if (onSubsPage) {
+    shortsLinks.forEach(link => {
+      // For desktop
+      link.closest('ytd-grid-video-renderer')?.remove();
+      // For mobile
+      link.closest('ytm-item-section-renderer')?.remove();
+    });
+  }
+  // Hide shorts on the results page
+  if (onResultsPage) {
+    shortsLinks.forEach(link => {
+      // For desktop
+      link.closest('ytd-video-renderer')?.remove();
+      link.closest('ytd-reel-shelf-renderer')?.remove();
+      // For mobile
+      link.closest('ytm-reel-shelf-renderer')?.remove();
+      link.closest('ytm-media-item')?.remove();
+    });
+  }
+  // Hide shorts on channel page
+  if (onChannelPage) {
+    // remove shorts tab
+    document.querySelectorAll('div.tab-content')?.forEach(tab => {
+      if (tab.innerText == "SHORTS") tab.parentElement.remove(); // desktop
+    });
+    document.querySelectorAll('a[role="tab"]')?.forEach(tab => {
+      if (tab.innerText == 'SHORTS') tab.remove(); // mobile
+    });
+    // remove shorts shelf
+    document.querySelectorAll('a[href^="/shorts"]')?.forEach(link => {
+      link.closest('ytm-reel-shelf-renderer.item')?.remove(); // mobile
+      link.closest('ytd-reel-shelf-renderer')?.remove(); // desktop
+    });
+  }
+}
+
+
+function skipVideoAds() {
+  const onVideoPage = videoRegex.test(location.href);
+  if (onVideoPage) {
+    const adVideo = document.querySelector('.ad-showing');
+    if (adVideo) {
+      // click "skip ad" button if it exists
+      // during the first 5s, th button is not clickable in UI, but it's clickable in console
+      const adSkipButton = document.querySelector(".ytp-ad-skip-button-slot button,.ytp-ad-overlay-close-button");
+      adSkipButton?.click();
+      const video = document.querySelector('.html5-main-video');
+      if (video && !isNaN(video?.duration)) {
+        video.play();
+        video.currentTime = video?.duration;
+      }
+    }
+  }
+}
+
+
+function unfoldPopupMenu() {
+  let menu = document.querySelector('ytd-menu-popup-renderer');
+  // menu.setAttribute('max-width', '')
+  // menu.setAttribute('max-height', '')
+  menu?.removeAttribute('max-width');
+  menu?.removeAttribute('max-height');
+}
+
+
+function removeStreamedVideosOnSubsPage() {
+  const onSubsPage = subsRegex.test(location.href);
+  // mobile
+  if (onSubsPage) {
+    const badges = document.querySelectorAll('.ytm-badge-and-byline-item-byline > .yt-core-attributed-string');
+    badges.forEach(badge => {
+      // Only support Chinese and English now
+      if (badge.textContent.startsWith('直播') || badge.textContent.startsWith('Live')) {
+        badge.closest('ytm-item-section-renderer')?.remove();
+      }
+    });
+  }
+  // desktop
+  if (onSubsPage) {
+    const badges = document.querySelectorAll('span.style-scope.ytd-grid-video-renderer');
+    badges.forEach(badge => {
+      // Only support Chinese and English now
+      if (badge.textContent.startsWith('直播') || badge.textContent.startsWith('Streamed')) {
+        console.log(badge);
+        badge.closest('ytd-grid-video-renderer')?.remove();
+      }
+    });
+  }
+}
+
+
+function removeCinematicSettingButton() {
+  document.querySelector('div.cinematic-setting')?.remove();
+}
