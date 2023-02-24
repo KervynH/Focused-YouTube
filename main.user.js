@@ -137,7 +137,7 @@ function redirectHomepage() {
 
 function redirectShortsPlayer() {
   const currentUrl = location.href;
-  const onShorts = shortsRegex.test();
+  const onShorts = shortsRegex.test(currentUrl);
   if (onShorts) {
     const newUrl = currentUrl.replace('shorts', 'watch');
     location.replace(newUrl);
