@@ -30,6 +30,8 @@ const SETTINGS = {
   hideChat: true,
   disableAutoPlay: true,
   hidePlayNextButton: true,
+
+  /// shorts settings ///
   hideShorts: true,
   redirectShortsPlayer: true,
 
