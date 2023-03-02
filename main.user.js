@@ -30,7 +30,7 @@ const SETTINGS = {
   hideChat: true,
   disableAutoPlay: true,
   hidePlayNextButton: true,
-  // hideCinematicModeButton: true,
+  hideCinematicModeButton: true,
 
   /// shorts settings ///
   hideShorts: true,
