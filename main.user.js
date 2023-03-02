@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Focused YouTube
-// @version      2
+// @version      3
 // @author       Kervyn
 // @namespace    https://raw.githubusercontent.com/KervynH/Focused-YouTube/main/main.user.js
 // @description  Remove ads, shorts, and algorithmic suggestions on YouTube
@@ -95,28 +95,29 @@ function runStaticSettings() {
 }
 
 
-function requestRunDynamicSettings() {
-  if (isRunning || frameRequested) return;
-  frameRequested = true;
-  setTimeout(runDynamicSettings, 40);
-}
-
-
 function runDynamicSettings() {
   if (isRunning) return;
   isRunning = true;
 
   handleNewPage();
 
-  if (SETTINGS.hideStreamedVideosOnSubs) hideStreamedVideosOnSubsPage();
+  if (SETTINGS.hideStreamedVideosOnSubs) hideStreamedVideosInSubs();
   if (SETTINGS.hideShorts) hideShortsVideos();
   if (SETTINGS.hideCinematicModeButton) hideCinematicModeButton();
   unfoldPopupMenu();
   skipVideoAds();
+  cleanSearchResults();
 
   frameRequested = false;
   isRunning = false;
   requestRunDynamicSettings();
+}
+
+
+function requestRunDynamicSettings() {
+  if (isRunning || frameRequested) return;
+  frameRequested = true;
+  setTimeout(runDynamicSettings, 40);
 }
 
 
@@ -242,7 +243,7 @@ function unfoldPopupMenu() {
 }
 
 
-function hideStreamedVideosOnSubsPage() {
+function hideStreamedVideosInSubs() {
   const onSubsPage = subsRegex.test(location.href);
   // mobile
   if (onSubsPage) {
@@ -260,8 +261,23 @@ function hideStreamedVideosOnSubsPage() {
     badges.forEach(badge => {
       // Only support Chinese and English now
       if (badge.textContent.startsWith('直播') || badge.textContent.startsWith('Streamed')) {
-        console.log(badge);
+        // console.log(badge);
         badge.closest('ytd-grid-video-renderer')?.remove();
+      }
+    });
+  }
+}
+
+
+function cleanSearchResults() {
+  const onResultsPage = resultsPageRegex.test(location.href);
+  if (onResultsPage) {
+    // Mobile
+    const badges = document.querySelectorAll('ytm-badge');
+    badges.forEach(badge => {
+      // Only support Chinese and English now
+      if (badge.innerText == '相關影片' || badge.innerText == '相关视频' || badge.innerText == 'Related') {
+        badge.closest('ytm-video-with-context-renderer')?.remove();
       }
     });
   }
