@@ -62,8 +62,8 @@ const resultsPageRegex = new RegExp('.*://.*youtube\.com/results.*', 'i');
 const homepageRegex = new RegExp('.*://(www|m)\.youtube\.com(/)?$', 'i');
 const shortsRegex = new RegExp('.*://.*youtube\.com/shorts.*', 'i');
 const videoRegex = new RegExp('.*://.*youtube\.com/watch\\?v=.*', 'i');
-const subsRegex = new RegExp(/\/feed\/subscriptions$/, 'i');
-const channelRegex = new RegExp('.*://.*youtube\.com/@*', 'i');
+const subsRegex = new RegExp('.*://.*youtube\.com/feed/subscriptions.*', 'i');
+const channelRegex = new RegExp('.*://.*youtube\.com/@.*', 'i');
 
 
 // Global dynamic settings variables
