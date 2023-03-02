@@ -24,12 +24,13 @@ const SETTINGS = {
   redirectHomepage: 'wl', // Values: 'wl', 'subs', 'lib', false
   hideAllButOneRow: true,
   hideInfiniteScroll: true,
-  
+
   /// video settings ///
   hideRelatedVideos: true,
   hideChat: true,
   disableAutoPlay: true,
   hidePlayNextButton: true,
+  hideCinematicModeButton: true,
 
   /// shorts settings ///
   hideShorts: true,
@@ -37,8 +38,7 @@ const SETTINGS = {
 
   /// misc ///
   hideStreamedVideosOnSubs: false,
-  hideCinematicModeButton: true,
-}
+};
 
 
 // Mark settings in the document
@@ -220,17 +220,14 @@ function hideShortsVideos() {
 function skipVideoAds() {
   const onVideoPage = videoRegex.test(location.href);
   if (onVideoPage) {
-    const adVideo = document.querySelector('.ad-showing');
-    if (adVideo) {
-      // click "skip ad" button if it exists
-      // during the first 5s, th button is not clickable in UI, but it's clickable in console
-      const adSkipButton = document.querySelector(".ytp-ad-skip-button-slot button,.ytp-ad-overlay-close-button");
-      adSkipButton?.click();
-      const video = document.querySelector('.html5-main-video');
-      if (video && !isNaN(video?.duration)) {
-        video.play();
-        video.currentTime = video?.duration;
-      }
+    // click "skip ad" button if it exists
+    // during the first 5s, th button is not clickable in UI, but it's clickable in console
+    const adSkipButton = document.querySelector(".ytp-ad-skip-button-slot button,.ytp-ad-overlay-close-button");
+    adSkipButton?.click();
+    const video = document.querySelector('.html5-main-video');
+    if (video && !isNaN(video?.duration)) {
+      video.play();
+      video.currentTime = video?.duration;
     }
   }
 }
@@ -272,5 +269,6 @@ function hideStreamedVideosOnSubsPage() {
 
 
 function hideCinematicModeButton() {
-  document.querySelector('div.cinematic-setting')?.remove();
+  const cinematicButton = document.querySelector('div.cinematic-setting');
+  cinematicButton?.remove();
 }
