@@ -1,10 +1,11 @@
 # Focused YouTube
 
-This is a userscript that reduces distractions on YouTube.
+This is a user-script that reduces distractions on YouTube.
 
 ## Features
 
-- Remove homepage and redirect to watch-later
+- Remove or simplify homepage
+- Redirect homepage to watch-later, or subscriptions, or library
 - Remove all algorithmic suggestions
 - Remove all shorts and redirect shorts to normal player
 - Remove live videos in subscription page
@@ -17,7 +18,7 @@ With a script manager such as tampermonkey, click [here](https://raw.githubuserc
 
 ## Customize Settings
 
-To customize the userscript, change the values of the object `SETTINGS` at the start of the code. 
+To customize the user-script, change the values of the object `SETTINGS` at the start of the code. 
 
 ## Credit
 
