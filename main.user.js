@@ -30,7 +30,7 @@ const SETTINGS = {
   hideChat: true,
   disableAutoPlay: true,
   hidePlayNextButton: true,
-  hideCinematicModeButton: true,
+  // hideCinematicModeButton: true,
 
   /// shorts settings ///
   hideShorts: true,
@@ -225,10 +225,15 @@ function skipVideoAds() {
     // during the first 5s, th button is not clickable in UI, but it's clickable in console
     const adSkipButton = document.querySelector(".ytp-ad-skip-button-slot button,.ytp-ad-overlay-close-button");
     adSkipButton?.click();
-    const video = document.querySelector('.html5-main-video');
-    if (video && !isNaN(video?.duration)) {
-      video.play();
-      video.currentTime = video?.duration;
+    
+    // skip ad video
+    const adVideo = document.querySelector('.ad-showing');
+    if (adVideo) {
+      const video = document.querySelector('.html5-main-video');
+      if (video && !isNaN(video?.duration)) {
+        video.play();
+        video.currentTime = video?.duration;
+      }
     }
   }
 }
