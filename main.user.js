@@ -37,7 +37,7 @@ const SETTINGS = {
   redirectShortsPlayer: true,
 
   /// misc ///
-  hideStreamedVideosOnSubs: false,
+  hideStreamedVideosInSubs: false,
 };
 
 
@@ -101,7 +101,7 @@ function runDynamicSettings() {
 
   handleNewPage();
 
-  if (SETTINGS.hideStreamedVideosOnSubs) hideStreamedVideosInSubs();
+  if (SETTINGS.hideStreamedVideosInSubs) hideStreamedVideosInSubs();
   if (SETTINGS.hideShorts) hideShortsVideos();
   if (SETTINGS.hideCinematicModeButton) hideCinematicModeButton();
   unfoldPopupMenu();
