@@ -27,12 +27,12 @@ const SETTINGS = {
 
   /// video settings ///
   hideRelatedVideos: true,
-  autoEnableTheaterMode: false,
-  singleColumnVideoPage: false,
   hideChat: true,
-  disableAutoPlay: true,
+  disableAutoPlayNext: true,
   hidePlayNextButton: true,
   hideCinematicModeButton: true,
+  autoEnableTheaterMode: false,
+  singleColumnVideoPage: false,
 
   /// shorts settings ///
   hideShortsInFeed: true,
@@ -94,7 +94,7 @@ function handleNewPage() {
 function runStaticSettings() {
   if (SETTINGS.redirectHomepage) redirectHomepage();
   if (SETTINGS.redirectShortsPlayer) redirectShortsPlayer();
-  if (SETTINGS.disableAutoPlay) disableAutoPlay();
+  if (SETTINGS.disableAutoPlayNext) disableAutoPlayNext();
 }
 
 
@@ -151,7 +151,7 @@ function redirectShortsPlayer() {
 }
 
 
-function disableAutoPlay() {
+function disableAutoPlayNext() {
   // turn off auto play button
   const autoplayButton = document.querySelectorAll('.ytp-autonav-toggle-button[aria-checked=true]');
   autoplayButton?.forEach(e => {
