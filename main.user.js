@@ -27,7 +27,7 @@ const SETTINGS = {
 
   /// video settings ///
   hideRelatedVideos: true,
-  autoEnableTheaterMode: true,
+  autoEnableTheaterMode: false,
   singleColumnVideoPage: false,
   hideChat: true,
   disableAutoPlay: true,
@@ -316,7 +316,6 @@ function singleColumnVideoPage() {
   if (onVideoPage) {
     var videoPage = document.querySelector('ytd-watch-flexy');
     videoPage?.removeAttribute('is-two-columns_');
-    enableTheaterMode();
     HTML.style['overflow-x'] = 'hidden';
   }
 }
