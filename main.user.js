@@ -48,7 +48,7 @@ HTML.setAttribute('hideAllButOneRow', SETTINGS.hideAllButOneRow);
 HTML.setAttribute('hideInfiniteScroll', SETTINGS.hideInfiniteScroll);
 HTML.setAttribute('hideRelatedVideos', SETTINGS.hideRelatedVideos);
 HTML.setAttribute('hideChat', SETTINGS.hideChat);
-HTML.setAttribute('removePlayNextButton', SETTINGS.hidePlayNextButton);
+HTML.setAttribute('hidePlayNextButton', SETTINGS.hidePlayNextButton);
 HTML.setAttribute('hideShorts', SETTINGS.hideShorts);
 
 

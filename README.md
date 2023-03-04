@@ -7,6 +7,7 @@ This is a user-script that reduces distractions on YouTube.
 - Remove or simplify homepage
 - Redirect homepage to watch-later, or subscriptions, or library
 - Remove all algorithmic suggestions
+- Remove "trending" and "explore"
 - Remove all shorts and redirect shorts to normal player
 - Remove live videos in subscription page
 - Block ads (maybe not all)

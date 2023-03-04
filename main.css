@@ -18,6 +18,8 @@ a[href="/feed/trending"],
 a[href="/feed/explore"],
 html[hideShorts="true"] a[title="Shorts"],
 html[hideShorts="true"] ytd-mini-guide-entry-renderer[aria-label="Shorts"],
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(4),
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3),
 
 /* Homepage */
 html[hideEntireHomepage="true"] ytd-browse[page-subtype="home"], 
