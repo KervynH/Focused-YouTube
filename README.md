@@ -2,20 +2,25 @@
 
 This is a user-script that reduces distractions on YouTube.
 
+## Installation
+
+With a script manager such as tampermonkey, click [here](https://raw.githubusercontent.com/KervynH/Focused-YouTube/main/main.user.js) to install.
+
 ## Features
 
+Enabled by default:
 - Remove or simplify homepage
 - Redirect homepage to watch-later, or subscriptions, or library
 - Remove all algorithmic suggestions
 - Remove "trending" and "explore"
 - Remove all shorts in feed and redirect shorts to normal player
+- Disable auto play-next
 - Block ads (maybe not all)
 - Simplify UI
+
+Disabled by default:
 - Auto enable theater mode
-
-## Installation
-
-With a script manager such as tampermonkey, click [here](https://raw.githubusercontent.com/KervynH/Focused-YouTube/main/main.user.js) to install.
+- Make video page content into single column
 
 ## Customize Settings
 
