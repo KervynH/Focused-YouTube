@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Focused YouTube
-// @version      4
+// @version      4.1
 // @author       Kervyn
 // @namespace    https://raw.githubusercontent.com/KervynH/Focused-YouTube/main/main.user.js
 // @description  Remove ads, shorts, and algorithmic suggestions on YouTube
@@ -95,6 +95,8 @@ function runStaticSettings() {
   if (SETTINGS.redirectHomepage) redirectHomepage();
   if (SETTINGS.redirectShortsPlayer) redirectShortsPlayer();
   if (SETTINGS.disableAutoPlay) disableAutoPlay();
+  if (SETTINGS.autoEnableTheaterMode) enableTheaterMode();
+  if (SETTINGS.singleColumnVideoPage) singleColumnVideoPage();
 }
 
 
@@ -107,8 +109,6 @@ function runDynamicSettings() {
   if (SETTINGS.hideStreamedVideosInSubs) hideStreamedVideosInSubs();
   if (SETTINGS.hideShortsInFeed) hideShortsVideos();
   if (SETTINGS.hideCinematicModeButton) hideCinematicModeButton();
-  if (SETTINGS.autoEnableTheaterMode) enableTheaterMode();
-  if (SETTINGS.singleColumnVideoPage) singleColumnVideoPage();
   // unfoldPopupMenu();
   skipVideoAds();
   cleanSearchResults();
@@ -314,7 +314,7 @@ function singleColumnVideoPage() {
   if (onVideoPage) {
     var videoPage = document.querySelector('ytd-watch-flexy');
     videoPage?.removeAttribute('is-two-columns_');
-    videoPage?.setAttribute('theater', '');
+    videoPage?.setAttribute('theater-requested_', '');
     HTML.style['overflow-x'] = 'hidden';
   }
 }
