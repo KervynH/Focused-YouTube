@@ -8,7 +8,6 @@ With a script manager such as tampermonkey, click [here](https://raw.githubuserc
 
 ## Features
 
-Enabled by default:
 - Remove or simplify homepage
 - Redirect homepage to watch-later, or subscriptions, or library
 - Remove all algorithmic suggestions
@@ -17,8 +16,6 @@ Enabled by default:
 - Disable auto play-next
 - Block ads (maybe not all)
 - Simplify UI
-
-Disabled by default:
 - Auto enable theater mode
 - Make video page content into single column
 
