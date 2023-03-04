@@ -4,7 +4,7 @@ ytd-mealbar-promo-renderer,
 ytd-carousel-ad-renderer,
 .ytd-display-ad-renderer,
 ytd-ad-slot-renderer,
-div.ytp-ad-overlay-image
+div.ytp-ad-overlay-image,
 
 /* General */
 html[hideShorts="true"] a[title="Shorts"],
@@ -22,7 +22,7 @@ ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(4),
 ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3),
 
 /* Homepage */
-html[hideEntireHomepage="true"] ytd-browse[page-subtype="home"], 
+html[hideEntireHomepage="true"] ytd-browse[page-subtype="home"],
 html[hideEntireHomepage="true"] a:not(#logo)[href="/"],
 html[hideAllButOneRow="true"] ytd-browse[page-subtype="home"] ytd-rich-grid-renderer>div#header,
 html[hideAllButOneRow="true"] ytd-browse[page-subtype="home"] ytd-rich-grid-renderer>#contents>ytd-rich-grid-row:nth-child(n+2),

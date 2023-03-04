@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Focused YouTube
-// @version      3
+// @version      4
 // @author       Kervyn
 // @namespace    https://raw.githubusercontent.com/KervynH/Focused-YouTube/main/main.user.js
 // @description  Remove ads, shorts, and algorithmic suggestions on YouTube
@@ -27,13 +27,15 @@ const SETTINGS = {
 
   /// video settings ///
   hideRelatedVideos: true,
+  autoEnableTheaterMode: true,
+  singleColumnVideoPage: false,
   hideChat: true,
   disableAutoPlay: true,
   hidePlayNextButton: true,
   hideCinematicModeButton: true,
 
   /// shorts settings ///
-  hideShorts: true,
+  hideShortsInFeed: true,
   redirectShortsPlayer: true,
 
   /// misc ///
@@ -49,7 +51,8 @@ HTML.setAttribute('hideInfiniteScroll', SETTINGS.hideInfiniteScroll);
 HTML.setAttribute('hideRelatedVideos', SETTINGS.hideRelatedVideos);
 HTML.setAttribute('hideChat', SETTINGS.hideChat);
 HTML.setAttribute('hidePlayNextButton', SETTINGS.hidePlayNextButton);
-HTML.setAttribute('hideShorts', SETTINGS.hideShorts);
+HTML.setAttribute('hideShorts', SETTINGS.hideShortsInFeed);
+HTML.setAttribute('hideEntireRightColumn', SETTINGS.hideEntireRightColumn);
 
 
 // Add remote css to remove unnecessary elements
@@ -102,9 +105,11 @@ function runDynamicSettings() {
   handleNewPage();
 
   if (SETTINGS.hideStreamedVideosInSubs) hideStreamedVideosInSubs();
-  if (SETTINGS.hideShorts) hideShortsVideos();
+  if (SETTINGS.hideShortsInFeed) hideShortsVideos();
   if (SETTINGS.hideCinematicModeButton) hideCinematicModeButton();
-  unfoldPopupMenu();
+  if (SETTINGS.autoEnableTheaterMode) enableTheaterMode();
+  if (SETTINGS.singleColumnVideoPage) singleColumnVideoPage();
+  // unfoldPopupMenu();
   skipVideoAds();
   cleanSearchResults();
 
@@ -225,7 +230,7 @@ function skipVideoAds() {
     // during the first 5s, th button is not clickable in UI, but it's clickable in console
     const adSkipButton = document.querySelector(".ytp-ad-skip-button-slot button,.ytp-ad-overlay-close-button");
     adSkipButton?.click();
-    
+
     // skip ad video
     const adVideo = document.querySelector('.ad-showing');
     if (adVideo) {
@@ -292,4 +297,24 @@ function cleanSearchResults() {
 function hideCinematicModeButton() {
   const cinematicButton = document.querySelector('div.cinematic-setting');
   cinematicButton?.remove();
+}
+
+
+function enableTheaterMode() {
+  const onVideoPage = videoRegex.test(location.href);
+  if (onVideoPage) {
+    const videoPage = document.querySelector('ytd-watch-flexy');
+    videoPage?.setAttribute('theater', '');
+  }
+}
+
+
+function singleColumnVideoPage() {
+  const onVideoPage = videoRegex.test(location.href);
+  if (onVideoPage) {
+    var videoPage = document.querySelector('ytd-watch-flexy');
+    videoPage?.removeAttribute('is-two-columns_');
+    videoPage?.setAttribute('theater', '');
+    HTML.style['overflow-x'] = 'hidden';
+  }
 }
