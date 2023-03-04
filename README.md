@@ -16,12 +16,15 @@ With a script manager such as tampermonkey, click [here](https://raw.githubuserc
 - Disable auto play-next
 - Block ads (maybe not all)
 - Simplify UI
-- Auto enable theater mode
-- Make video page content into single column
 
 ## Customize Settings
 
 To customize the user-script, change the values of the object `SETTINGS` at the start of the code. 
+
+The following features are disabled by default and can be enabled by changing `SETTINGS`.:
+- Remove streamed videos in subscriptions
+- Auto enable theater mode
+- Make video page content into single column
 
 ## Credit
 
