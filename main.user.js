@@ -303,7 +303,7 @@ function hideCinematicModeButton() {
 function enableTheaterMode() {
   const onVideoPage = videoRegex.test(location.href);
   if (onVideoPage) {
-    const theaterButton = document.querySelector('button.ytp-size-button')
+    const theaterButton = document.querySelector('button.ytp-size-button');
     const videoPage = document.querySelector('ytd-watch-flexy');
     const isTheaterMode = videoPage?.hasAttribute('theater');
     if (!isTheaterMode) theaterButton?.click();
