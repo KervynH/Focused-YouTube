@@ -31,10 +31,11 @@ html[hideInfiniteScroll="true"] ytd-browse[page-subtype="home"] ytd-rich-grid-re
 /* Video Player - UI*/
 html[hidePlayNextButton="true"] a.ytp-next-button,
 html[hideChat="true"] #chat,
+html[hideMiniPlayerButton="true"] .ytp-button.ytp-miniplayer-button,
+html[disableAutoPlayNext="true"] button.ytp-button[data-tooltip-target-id="ytp-autonav-toggle-button"],
 div.ytp-pause-overlay,
 .ytp-cards-teaser,
 button.ytp-button.ytp-cards-button,
-.ytp-button.ytp-miniplayer-button,
 .iv-branding.annotation-type-custom.annotation,
 
 /* Video Player - Comments */

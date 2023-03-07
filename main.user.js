@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Focused YouTube
-// @version      4.2
+// @version      4.3
 // @author       Kervyn
 // @namespace    https://raw.githubusercontent.com/KervynH/Focused-YouTube/main/main.user.js
 // @description  Remove ads, shorts, and algorithmic suggestions on YouTube
@@ -30,6 +30,7 @@ const SETTINGS = {
   hideChat: true,
   disableAutoPlayNext: true,
   hidePlayNextButton: true,
+  hideMiniPlayerButton: true,
   hideCinematicModeButton: true,
   autoEnableTheaterMode: false,
   singleColumnVideoPage: false,
@@ -53,6 +54,8 @@ HTML.setAttribute('hideChat', SETTINGS.hideChat);
 HTML.setAttribute('hidePlayNextButton', SETTINGS.hidePlayNextButton);
 HTML.setAttribute('hideShorts', SETTINGS.hideShortsInFeed);
 HTML.setAttribute('hideEntireRightColumn', SETTINGS.hideEntireRightColumn);
+HTML.setAttribute('disableAutoPlayNext', SETTINGS.disableAutoPlayNext);
+HTML.setAttribute('hideMiniPlayerButton', SETTINGS.hideMiniPlayerButton);
 
 
 // Add remote css to remove unnecessary elements
