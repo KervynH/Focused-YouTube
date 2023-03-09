@@ -112,7 +112,6 @@ function runDynamicSettings() {
   if (SETTINGS.hideCinematicModeButton) hideCinematicModeButton();
   if (SETTINGS.autoEnableTheaterMode) enableTheaterMode();
   if (SETTINGS.singleColumnVideoPage) singleColumnVideoPage();
-  // unfoldPopupMenu();
   skipVideoAds();
   cleanSearchResults();
 
@@ -244,15 +243,6 @@ function skipVideoAds() {
       }
     }
   }
-}
-
-
-function unfoldPopupMenu() {
-  let menu = document.querySelector('ytd-menu-popup-renderer');
-  // menu.setAttribute('max-width', '')
-  // menu.setAttribute('max-height', '')
-  menu?.removeAttribute('max-width');
-  menu?.removeAttribute('max-height');
 }
 
 
