@@ -112,7 +112,6 @@ function runDynamicSettings() {
   if (SETTINGS.hideCinematicModeButton) hideCinematicModeButton();
   if (SETTINGS.autoEnableTheaterMode) enableTheaterMode();
   if (SETTINGS.singleColumnVideoPage) singleColumnVideoPage();
-  unfoldPopupMenu();
   cleanSearchResults();
   skipVideoAds();
 
@@ -312,10 +311,4 @@ function singleColumnVideoPage() {
     videoPage?.removeAttribute('is-two-columns_');
     HTML.style['overflow-x'] = 'hidden';
   }
-}
-
-
-function unfoldPopupMenu() {
-  const popup = document.querySelector('ytd-menu-popup-renderer');
-  popup.style.removeProperty('max-height');
 }

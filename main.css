@@ -60,6 +60,11 @@ div.sbdd_a,
   display: none !important;
 }
 
+/* Unfold video popup menus */
+ytd-menu-popup-renderer {
+  max-height: 1000px !important
+}
+
 /**********
  * Mobile *
 **********/
