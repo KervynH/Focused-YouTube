@@ -35,7 +35,6 @@
     hidePlayPreviousButton: true,
     hideMiniPlayerButton: true,
     disableAmbientModeOnMobile: true,
-    autoSelectVideoQuality: '1080p', // Options: false, '2160p', '720p', ...
 
     /// shorts settings ///
     hideShorts: true,
@@ -81,7 +80,6 @@
     if (SETTINGS.redirectHomepage) redirectHomepage();
     if (SETTINGS.redirectShortsPlayer) redirectShortsPlayer();
     if (SETTINGS.disableAutoPlayNext) disableAutoPlayNext();
-    if (SETTINGS.autoSelectVideoQuality) selectVideoQuality();
   }
 
 
@@ -255,21 +253,21 @@
   }
 
 
-  function selectVideoQuality() {
-    const ytApiArgs = {
-      "4320p": "highres",
-      "2880p": "hd2880",
-      "1440p": "hd1440",
-      "1080p": "hd1080",
-      "720p": "hd720",
-      "480p": "large",
-      "360p": "medium",
-      "240p": "small",
-      "144p": "tiny"
-    };
-    if (path.startsWith('/watch')) {
-      const player = document.querySelector('.html5-video-player');
-      player?.setPlaybackQualityRange(ytApiArgs[SETTINGS.autoSelectVideoQuality]);
-    }
-  }
+  // function selectVideoQuality() {
+  //   const ytApiArgs = {
+  //     "4320p": "highres",
+  //     "2880p": "hd2880",
+  //     "1440p": "hd1440",
+  //     "1080p": "hd1080",
+  //     "720p": "hd720",
+  //     "480p": "large",
+  //     "360p": "medium",
+  //     "240p": "small",
+  //     "144p": "tiny"
+  //   };
+  //   if (path.startsWith('/watch')) {
+  //     const player = document.querySelector('.html5-video-player');
+  //     player?.setPlaybackQualityRange(ytApiArgs[SETTINGS.autoSelectVideoQuality]);
+  //   }
+  // }
 })();
