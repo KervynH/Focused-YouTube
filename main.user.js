@@ -7,7 +7,7 @@
 // @match        *://*.youtube.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @run-at       document-start
-// @grant        GM_addStyle
+// @grant        GM.addStyle
 // ==/UserScript==
 
 
@@ -123,10 +123,10 @@ const MOBILE_BLOCK_LIST = [
   'ytm-chip-cloud-chip-renderer[chip-style="STYLE_EXPLORE_LAUNCHER_CHIP"]',
 ];
 if (location.hostname.startsWith('www.')) {
-  DESKTOP_BLOCK_LIST.forEach(e => GM_addStyle(`${e} {display: none !important}`));
+  DESKTOP_BLOCK_LIST.forEach(e => GM.addStyle(`${e} {display: none !important}`));
 }
 if (location.hostname.startsWith('m.')) {
-  MOBILE_BLOCK_LIST.forEach(e => GM_addStyle(`${e} {display: none !important}`));
+  MOBILE_BLOCK_LIST.forEach(e => GM.addStyle(`${e} {display: none !important}`));
 }
 
 // Global variables for dynamic settings
