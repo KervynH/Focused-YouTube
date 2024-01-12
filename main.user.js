@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Focused YouTube
-// @version      5.0
+// @version      5.1
 // @author       Kervyn
 // @namespace    https://raw.githubusercontent.com/KervynH/Focused-YouTube/main/main.user.js
 // @description  Remove ads, shorts, and algorithmic suggestions on YouTube
@@ -25,7 +25,8 @@ const SETTINGS = {
   hideInfiniteScroll: true,
 
   /// video settings ///
-  hideChat: true,
+  skipAds: true,
+  hideLiveChat: true,
   hideRelatedVideos: true,
   disableAutoPlayNext: true,
   hidePlayNextButton: true,
@@ -81,6 +82,7 @@ const DESKTOP_BLOCK_LIST = [
   'html[hideInfiniteScroll="true"] ytd-browse[page-subtype="home"] ytd-rich-grid-renderer>#contents>ytd-continuation-item-renderer',
   'html[hideSearchButton="true"] div.ytd-masthead>ytd-searchbox',
   'html[hideSearchButton="true"] div.ytd-masthead>#voice-search-button',
+  'html[hideShorts="true"] ytd-rich-section-renderer',
 
   // Video Player
   'html[hidePlayNextButton="true"] a.ytp-next-button.ytp-button',
@@ -114,8 +116,8 @@ const MOBILE_BLOCK_LIST = [
   // Video Player 
   'html[hideRelatedVideos="true"] ytm-item-section-renderer[section-identifier="related-items"]>lazy-list',
   'html[disableAutoPlayNext="true"] button.ytm-autonav-toggle-button-container',
-  'html[hidePlayNextButton="true"] div.player-controls-middle.center>button:nth-child(5)',
-  'html[hidePlayPreviousButton="true"] div.player-controls-middle.center>button:nth-child(1)',
+  'html[hidePlayPreviousButton="true"] .player-controls-middle-core-buttons > button:nth-child(1)',
+  'html[hidePlayNextButton="true"] .player-controls-middle-core-buttons > button:nth-child(5)',
 
   // Navigation Bar 
   'html[hideEntireHomepage="true"] ytm-pivot-bar-item-renderer:nth-child(1)',
@@ -162,11 +164,11 @@ function runDynamicSettings() {
   isRunning = true;
 
   handleNewPage();
-
+  
+  cleanSearchResults();
   if (SETTINGS.hideShorts) hideShortsVideos();
   if (SETTINGS.disableAmbientModeOnMobile) disableAmbientMode();
-  cleanSearchResults();
-  skipVideoAds();
+  if (SETTINGS.skipAds) skipVideoAds();
 
   frameRequested = false;
   isRunning = false;
