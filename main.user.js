@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Focused YouTube
-// @version      5.1
+// @version      5.2
 // @author       Kervyn
 // @namespace    https://raw.githubusercontent.com/KervynH/Focused-YouTube/main/main.user.js
 // @description  Remove ads, shorts, and algorithmic suggestions on YouTube
@@ -32,7 +32,7 @@ const SETTINGS = {
   hidePlayNextButton: true,
   hidePlayPreviousButton: true,
   hideMiniPlayerButton: true,
-  disableAmbientModeOnMobile: true,
+  disableAmbientMode: true, // currently only works on mobile
 
   /// shorts settings ///
   hideShorts: true,
@@ -40,7 +40,7 @@ const SETTINGS = {
 
   /// misc ///
   hideUploadButton: true,
-  hideSearchButton: true,
+  hideSearchButton: false,
 };
 
 // Mark settings in HTML
@@ -100,7 +100,6 @@ const DESKTOP_BLOCK_LIST = [
   '#container.ytd-search ytd-search-pyv-renderer',
   '#container.ytd-search ytd-reel-shelf-renderer',
   '#container.ytd-search ytd-shelf-renderer',
-  '.ytd-search #contents>ytd-continuation-item-renderer',
 ];
 const MOBILE_BLOCK_LIST = [
   // Ads 
@@ -314,16 +313,5 @@ function disableAmbientMode() {
     const cinematicDiv = document.querySelector('div.cinematic-setting');
     cinematicDiv?.remove();
     document.querySelector('ytm-cinematic-container-renderer')?.remove();
-
-    // Desktop
-    // document.querySelectorAll("div[role='menuitemcheckbox']")?.forEach(b => {
-    //   if (b.innerText.startsWith('電影') ||
-    //     b.innerText.startsWith('影院') ||
-    //     b.innerText == 'Ambient Mode') { b.remove(); }
-    // });
-    // const ambientModeCheckbox = document.querySelector("div[role='menuitemcheckbox']");
-    // // Note: The first instance is the cinematic button
-    // ambientModeCheckbox?.remove();
-    // HTML.setAttribute('disable_ambient_mode', true);
   }
 }
