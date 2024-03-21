@@ -31,7 +31,7 @@ const SETTINGS = {
   hidePlayNextButton: true,
   hidePlayPreviousButton: true,
   hideMiniPlayerButton: true,
-  disableAmbientModeOnMobile: true,
+  disableAmbientMode: true, // currently only works on mobile
 
   /// shorts settings ///
   hideShorts: true,
@@ -97,7 +97,6 @@ const DESKTOP_BLOCK_LIST = [
   '#container.ytd-search ytd-search-pyv-renderer',
   '#container.ytd-search ytd-reel-shelf-renderer',
   '#container.ytd-search ytd-shelf-renderer',
-  '.ytd-search #contents>ytd-continuation-item-renderer',
 ];
 const MOBILE_BLOCK_LIST = [
   // Ads 
