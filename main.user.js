@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Focused YouTube
-// @version      5.1
+// @version      2024-03-20
 // @author       Kervyn
 // @namespace    https://raw.githubusercontent.com/KervynH/Focused-YouTube/main/main.user.js
 // @description  Remove ads, shorts, and algorithmic suggestions on YouTube
@@ -28,7 +28,6 @@ const SETTINGS = {
   skipAds: true,
   hideLiveChat: true,
   hideRelatedVideos: true,
-  disableAutoPlayNext: true,
   hidePlayNextButton: true,
   hidePlayPreviousButton: true,
   hideMiniPlayerButton: true,
@@ -40,7 +39,7 @@ const SETTINGS = {
 
   /// misc ///
   hideUploadButton: true,
-  hideSearchButton: true,
+  hideSearchButton: false,
 };
 
 // Mark settings in HTML
@@ -89,8 +88,6 @@ const DESKTOP_BLOCK_LIST = [
   'html[hidePlayPreviousButton="true"] a.ytp-prev-button.ytp-button',
   'html[hideChat="true"] #chat',
   'html[hideMiniPlayerButton="true"] .ytp-button.ytp-miniplayer-button',
-  'html[disableAutoPlayNext="true"] div.ytp-autonav-toggle-button-container',
-  'html[disableAutoPlayNext="true"] div.ytp-autonav-toggle-button',
   '.iv-branding.annotation-type-custom.annotation',
   '#movie_player button.ytp-button.ytp-share-button',
   '#movie_player button.ytp-button.ytp-watch-later-button',
@@ -115,7 +112,6 @@ const MOBILE_BLOCK_LIST = [
 
   // Video Player 
   'html[hideRelatedVideos="true"] ytm-item-section-renderer[section-identifier="related-items"]>lazy-list',
-  'html[disableAutoPlayNext="true"] button.ytm-autonav-toggle-button-container',
   'html[hidePlayPreviousButton="true"] .player-controls-middle-core-buttons > button:nth-child(1)',
   'html[hidePlayNextButton="true"] .player-controls-middle-core-buttons > button:nth-child(5)',
 
@@ -139,7 +135,7 @@ let frameRequested = false;
 handleNewPage();
 
 
-/***** Functions *****/
+/***** Main Functions *****/
 
 function handleNewPage() {
   // check whether url has changed
@@ -151,13 +147,10 @@ function handleNewPage() {
   requestRunDynamicSettings();
 }
 
-
 function runStaticSettings() {
   if (SETTINGS.redirectHomepage) redirectHomepage();
   if (SETTINGS.redirectShortsPlayer) redirectShortsPlayer();
-  if (SETTINGS.disableAutoPlayNext) disableAutoPlayNext();
 }
-
 
 function runDynamicSettings() {
   if (isRunning) return;
@@ -167,7 +160,7 @@ function runDynamicSettings() {
   
   cleanSearchResults();
   if (SETTINGS.hideShorts) hideShortsVideos();
-  if (SETTINGS.disableAmbientModeOnMobile) disableAmbientMode();
+  if (SETTINGS.disableAmbientModeOnMobile) disableAmbientModeOnMobile();
   if (SETTINGS.skipAds) skipVideoAds();
 
   frameRequested = false;
@@ -175,13 +168,14 @@ function runDynamicSettings() {
   requestRunDynamicSettings();
 }
 
-
 function requestRunDynamicSettings() {
   if (isRunning || frameRequested) return;
   frameRequested = true;
   setTimeout(runDynamicSettings, 50);
 }
 
+
+/***** Features *****/
 
 function redirectHomepage() {
   if (path == '/') {
@@ -197,14 +191,12 @@ function redirectHomepage() {
   }
 }
 
-
 function redirectShortsPlayer() {
   if (path.startsWith('/shorts')) {
     const redirPath = path.replace('shorts', 'watch');
     location.replace(redirPath);
   }
 }
-
 
 function disableAutoPlayNext() {
   // turn off auto play button
@@ -233,7 +225,6 @@ function disableAutoPlayNext() {
     }, 100)`;
   document.body?.appendChild(script);
 }
-
 
 function hideShortsVideos() {
   const shortsLinks = document.querySelectorAll('a[href^="/shorts"]');
@@ -273,7 +264,6 @@ function hideShortsVideos() {
   }
 }
 
-
 function skipVideoAds() {
   if (path.startsWith('/watch')) {
     // click "skip ad" button if it exists
@@ -293,7 +283,6 @@ function skipVideoAds() {
   }
 }
 
-
 function cleanSearchResults() {
   if (path.startsWith('/results')) {
     // Mobile
@@ -307,23 +296,11 @@ function cleanSearchResults() {
   }
 }
 
-
-function disableAmbientMode() {
+function disableAmbientModeOnMobile() {
   if (path.startsWith('/watch')) {
     // Mobile
     const cinematicDiv = document.querySelector('div.cinematic-setting');
     cinematicDiv?.remove();
     document.querySelector('ytm-cinematic-container-renderer')?.remove();
-
-    // Desktop
-    // document.querySelectorAll("div[role='menuitemcheckbox']")?.forEach(b => {
-    //   if (b.innerText.startsWith('電影') ||
-    //     b.innerText.startsWith('影院') ||
-    //     b.innerText == 'Ambient Mode') { b.remove(); }
-    // });
-    // const ambientModeCheckbox = document.querySelector("div[role='menuitemcheckbox']");
-    // // Note: The first instance is the cinematic button
-    // ambientModeCheckbox?.remove();
-    // HTML.setAttribute('disable_ambient_mode', true);
   }
 }
