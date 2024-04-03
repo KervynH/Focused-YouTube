@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         Focused YouTube
-// @version      2024-03-20
+// @version      2024-04-03
 // @author       Kervyn
 // @namespace    https://raw.githubusercontent.com/KervynH/Focused-YouTube/main/main.user.js
 // @description  Remove ads, shorts, and algorithmic suggestions on YouTube
 // @match        *://*.youtube.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
-// @run-at       document-start
+// @run-at       document-end
 // @grant        GM.addStyle
 // ==/UserScript==
 
@@ -31,7 +31,7 @@ const SETTINGS = {
   hidePlayNextButton: true,
   hidePlayPreviousButton: true,
   hideMiniPlayerButton: true,
-  disableAmbientMode: true, // currently only works on mobile
+  disablePlaylistAutoPlay: true,
 
   /// shorts settings ///
   hideShorts: true,
@@ -126,7 +126,7 @@ if (location.hostname.startsWith('m.')) {
   MOBILE_BLOCK_LIST.forEach(e => GM.addStyle(`${e} {display: none !important}`));
 }
 
-// Global variables for dynamic settings
+// Global variables for running dynamic settings
 let path = undefined;
 let isRunning = false;
 let frameRequested = false;
@@ -153,14 +153,16 @@ function runStaticSettings() {
 
 function runDynamicSettings() {
   if (isRunning) return;
+  
   isRunning = true;
 
   handleNewPage();
-  
+
   cleanSearchResults();
   if (SETTINGS.hideShorts) hideShortsVideos();
-  if (SETTINGS.disableAmbientModeOnMobile) disableAmbientModeOnMobile();
   if (SETTINGS.skipAds) skipVideoAds();
+  if (SETTINGS.hideRelatedVideos) disableRelatedAutoPlay();
+  if (SETTINGS.disablePlaylistAutoPlay) disablePlaylistAutoPlay();
 
   frameRequested = false;
   isRunning = false;
@@ -170,7 +172,7 @@ function runDynamicSettings() {
 function requestRunDynamicSettings() {
   if (isRunning || frameRequested) return;
   frameRequested = true;
-  setTimeout(runDynamicSettings, 50);
+  setTimeout(runDynamicSettings, 100);
 }
 
 
@@ -197,7 +199,7 @@ function redirectShortsPlayer() {
   }
 }
 
-function disableAutoPlayNext() {
+function disableRelatedAutoPlay() {
   // turn off auto play button
   const autoplayButton = document.querySelectorAll('.ytp-autonav-toggle-button[aria-checked=true]');
   autoplayButton?.forEach(e => {
@@ -212,17 +214,30 @@ function disableAutoPlayNext() {
       e.click();
     }
   });
-  // disable playlist auto play
-  const existingScript = document.querySelector('script[id="disable_playlist_autoplay"]');
-  if (existingScript) return; // Avoid repeatedly injecting script in setInterval(RunDynamicSettings, 50)
-  const script = document.createElement("script");
-  script.id = 'disable_playlist_autoplay';
-  script.type = "text/javascript";
-  script.innerText = `setInterval(function() {
-      let pm = document.querySelector('yt-playlist-manager');
-      if (pm) pm.canAutoAdvance_ = false;
-    }, 100)`;
-  document.body?.appendChild(script);
+}
+
+function disablePlaylistAutoPlay() {
+  if (path.startsWith('/watch')) {
+    var script = document.createElement("script");
+    script.id = "npafy-script";
+    script.type = "text/javascript";
+    script.innerText = [
+      "(function() {",
+      "	var ypm;",
+      "	function noAutoAdvance() {",
+      "		if (!ypm) {",
+      "			ypm = document.getElementsByTagName('yt-playlist-manager')[0];",
+      "		}",
+      "		if (ypm) {",
+      "			ypm.canAutoAdvance_ = false;",
+      "		}",
+      "	}",
+      "	noAutoAdvance();",
+      "	setInterval(noAutoAdvance, 100);",
+      "})();"
+    ].join("\n");
+    document.body.appendChild(script);
+  }
 }
 
 function hideShortsVideos() {
@@ -292,14 +307,5 @@ function cleanSearchResults() {
         badge.closest('ytm-video-with-context-renderer')?.remove();
       }
     });
-  }
-}
-
-function disableAmbientModeOnMobile() {
-  if (path.startsWith('/watch')) {
-    // Mobile
-    const cinematicDiv = document.querySelector('div.cinematic-setting');
-    cinematicDiv?.remove();
-    document.querySelector('ytm-cinematic-container-renderer')?.remove();
   }
 }
