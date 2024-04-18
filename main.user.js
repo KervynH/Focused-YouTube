@@ -18,7 +18,7 @@
 const SETTINGS = {
   /// homepage redirect ///
   // redirectHomepage Options: 'wl', 'subs', 'lib', false
-  redirectHomepage: false,
+  redirectHomepage: 'wl',
   hideHomepageButton: true,
 
   /// homepage suggestions ///
