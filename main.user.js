@@ -1,30 +1,32 @@
 // ==UserScript==
 // @name         Focused YouTube
-// @version      2024-04-03
+// @version      2024-04-18
 // @author       Kervyn
 // @namespace    https://raw.githubusercontent.com/KervynH/Focused-YouTube/main/main.user.js
 // @description  Remove ads, shorts, and algorithmic suggestions on YouTube
 // @match        *://*.youtube.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
-// @run-at       document-end
+// @run-at       document-start
 // @grant        GM.addStyle
 // ==/UserScript==
 
-
 /* Credit:  https://github.com/lawrencehook/remove-youtube-suggestions */
-
 
 'use strict';
 
 // Config custom settings here
 const SETTINGS = {
-  /// homepage settings ///
-  hideEntireHomepage: true,
-  redirectHomepage: 'subs', // Options: 'wl', 'subs', 'lib', false
+  /// homepage redirect ///
+  // redirectHomepage Options: 'wl', 'subs', 'lib', false
+  redirectHomepage: false,
+  hideHomepageButton: true,
+
+  /// homepage suggestions ///
+  hideAllSuggestions: false,
   hideAllButOneRow: true,
   hideInfiniteScroll: true,
 
-  /// video settings ///
+  /// video player ///
   skipAds: true,
   hideLiveChat: true,
   hideRelatedVideos: true,
@@ -33,12 +35,11 @@ const SETTINGS = {
   hideMiniPlayerButton: true,
   disablePlaylistAutoPlay: true,
 
-  /// shorts settings ///
+  /// shorts ///
   hideShorts: true,
   redirectShortsPlayer: true,
 
   /// misc ///
-  hideUploadButton: true,
   hideSearchButton: false,
 };
 
@@ -57,13 +58,12 @@ const DESKTOP_BLOCK_LIST = [
   '.ytd-display-ad-renderer',
   'ytd-ad-slot-renderer',
   'div.ytp-ad-overlay-image',
+  '.iv-branding.annotation-type-custom.annotation',
 
-  // General 
+  // Shorts
+  'html[hideShorts="true"] ytd-rich-section-renderer',
   'html[hideShorts="true"] a[title="Shorts"]',
   'html[hideShorts="true"] ytd-reel-shelf-renderer',
-  'html[hideRelatedVideos="true"] #secondary>div.circle',
-  'html[hideRelatedVideos="true"] #related',
-  'html[hideRelatedVideos="true"] .html5-endscreen',
 
   // Left Bar Navigation 
   'a[href="/feed/trending"]',
@@ -74,29 +74,31 @@ const DESKTOP_BLOCK_LIST = [
   'ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3)',
 
   // Homepage 
-  'html[hideEntireHomepage="true"] ytd-browse[page-subtype="home"]',
-  'html[hideEntireHomepage="true"] a:not(#logo)[href="/"]',
-  'html[hideAllButOneRow="true"] ytd-browse[page-subtype="home"] ytd-rich-grid-renderer>div#header',
+  'html[hideHomepageButton="true"] a:not(#logo)[href="/"]',
+  'html[hideAllSuggestions="true"] ytd-browse[page-subtype="home"]',
   'html[hideAllButOneRow="true"] ytd-browse[page-subtype="home"] ytd-rich-grid-renderer>#contents>ytd-rich-grid-row:nth-child(n+2)',
+  'html[hideAllButOneRow="true"] ytd-browse[page-subtype="home"] #header',
   'html[hideInfiniteScroll="true"] ytd-browse[page-subtype="home"] ytd-rich-grid-renderer>#contents>ytd-continuation-item-renderer',
-  'html[hideSearchButton="true"] div.ytd-masthead>ytd-searchbox',
-  'html[hideSearchButton="true"] div.ytd-masthead>#voice-search-button',
-  'html[hideShorts="true"] ytd-rich-section-renderer',
 
   // Video Player
+  'html[hideRelatedVideos="true"] #secondary>div.circle',
+  'html[hideRelatedVideos="true"] #related',
+  'html[hideRelatedVideos="true"] .html5-endscreen',
   'html[hidePlayNextButton="true"] a.ytp-next-button.ytp-button',
   'html[hidePlayPreviousButton="true"] a.ytp-prev-button.ytp-button',
   'html[hideChat="true"] #chat',
   'html[hideMiniPlayerButton="true"] .ytp-button.ytp-miniplayer-button',
-  '.iv-branding.annotation-type-custom.annotation',
-  '#movie_player button.ytp-button.ytp-share-button',
-  '#movie_player button.ytp-button.ytp-watch-later-button',
+  // '#movie_player button.ytp-button.ytp-share-button',
+  // '#movie_player button.ytp-button.ytp-watch-later-button',
+  '.ytd-download-button-renderer.style-scope',
 
-  // Search Results Page 
+  // Search
   'div.sbdd_a',
   '#container.ytd-search ytd-search-pyv-renderer',
   '#container.ytd-search ytd-reel-shelf-renderer',
   '#container.ytd-search ytd-shelf-renderer',
+  'html[hideSearchButton="true"] div.ytd-masthead>ytd-searchbox',
+  'html[hideSearchButton="true"] div.ytd-masthead>#voice-search-button',
 ];
 const MOBILE_BLOCK_LIST = [
   // Ads 
@@ -104,18 +106,17 @@ const MOBILE_BLOCK_LIST = [
   'ytm-promoted-sparkles-web-renderer',
 
   // Homepage 
-  'html[hideEntireHomepage="true"] div[tab-identifier="FEwhat_to_watch"]',
+  'html[hideHomepageButton="true"] div[tab-identifier="FEwhat_to_watch"]',
   'html[hideSearchButton="true"] #header-bar > header > div > button',
   'html[hideSearchButton="true"] #center.style-scope.ytd-masthead',
-  'html[hideUploadButton="true"] #buttons > ytd-topbar-menu-button-renderer.style-scope.ytd-masthead.style-default',
 
   // Video Player 
   'html[hideRelatedVideos="true"] ytm-item-section-renderer[section-identifier="related-items"]>lazy-list',
-  'html[hidePlayPreviousButton="true"] .player-controls-middle-core-buttons > button:nth-child(1)',
-  'html[hidePlayNextButton="true"] .player-controls-middle-core-buttons > button:nth-child(5)',
+  'html[hidePlayPreviousButton="true"] .player-controls-middle-core-buttons>button:nth-child(1)',
+  'html[hidePlayNextButton="true"] .player-controls-middle-core-buttons>button:nth-child(5)',
 
   // Navigation Bar 
-  'html[hideEntireHomepage="true"] ytm-pivot-bar-item-renderer:nth-child(1)',
+  'html[hideHomepageButton="true"] ytm-pivot-bar-item-renderer:nth-child(1)',
   'html[hideShorts="true"] ytm-pivot-bar-item-renderer:nth-child(2)',
   'ytm-chip-cloud-chip-renderer[chip-style="STYLE_EXPLORE_LAUNCHER_CHIP"]',
 ];
