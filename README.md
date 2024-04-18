@@ -9,13 +9,14 @@ With a script manager such as tampermonkey, [click here](https://raw.githubuserc
 ## Features
 
 - Remove or simplify homepage
-- Redirect homepage to watch-later, or subscriptions, or library
+- Redirect homepage to "watch later", or "subscriptions", or "library"
+- Remove all shorts in feed and redirect shorts to normal player
 - Remove all algorithmic suggestions
 - Remove "trending" and "explore"
-- Remove all shorts in feed and redirect shorts to normal player
-- Disable auto play-next
-- Block ads (maybe not all)
-- Simplify UI
+- Simplify UI by removing unwanted elements
+- Clean up search results
+- Disable video autoplay
+- Block ads (may not work)
 
 ## Customize Settings
 
