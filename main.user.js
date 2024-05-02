@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Focused YouTube
-// @version      2024-04-18
+// @version      2024-05-02
 // @author       Kervyn
 // @namespace    https://raw.githubusercontent.com/KervynH/Focused-YouTube/main/main.user.js
 // @description  Remove ads, shorts, and algorithmic suggestions on YouTube
@@ -128,6 +128,7 @@ if (location.hostname.startsWith('m.')) {
 }
 
 // Global variables for running dynamic settings
+const TIMEOUT = 1000;
 let path = undefined;
 let isRunning = false;
 let frameRequested = false;
@@ -154,7 +155,7 @@ function runStaticSettings() {
 
 function runDynamicSettings() {
   if (isRunning) return;
-  
+
   isRunning = true;
 
   handleNewPage();
@@ -173,7 +174,7 @@ function runDynamicSettings() {
 function requestRunDynamicSettings() {
   if (isRunning || frameRequested) return;
   frameRequested = true;
-  setTimeout(runDynamicSettings, 100);
+  setTimeout(runDynamicSettings, TIMEOUT);
 }
 
 
