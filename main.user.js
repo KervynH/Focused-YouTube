@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         Focused YouTube
-// @version      2024-05-02
+// @version      2024-09-05
 // @author       Kervyn
 // @namespace    https://raw.githubusercontent.com/KervynH/Focused-YouTube/main/main.user.js
 // @description  Remove ads, shorts, and algorithmic suggestions on YouTube
 // @match        *://*.youtube.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
-// @run-at       document-start
+// @run-at       document-end
 // @grant        GM.addStyle
 // ==/UserScript==
 
@@ -127,58 +127,23 @@ if (location.hostname.startsWith('m.')) {
   MOBILE_BLOCK_LIST.forEach(e => GM.addStyle(`${e} {display: none !important}`));
 }
 
-// Global variables for running dynamic settings
-const TIMEOUT = 1000;
-let path = undefined;
-let isRunning = false;
-let frameRequested = false;
-
-handleNewPage();
+// Start running dynamic settings
+var path = location.pathname;
+setInterval(runDynamicSettings, 100);
 
 
-/***** Main Functions *****/
-
-function handleNewPage() {
-  // check whether url has changed
-  if (path == location.pathname) return;
-  path = location.pathname;
-  // Static settings run only once
-  runStaticSettings();
-  // Dyamic settings run periodically
-  requestRunDynamicSettings();
-}
-
-function runStaticSettings() {
-  if (SETTINGS.redirectHomepage) redirectHomepage();
-  if (SETTINGS.redirectShortsPlayer) redirectShortsPlayer();
-}
+/***** Functions *****/
 
 function runDynamicSettings() {
-  if (isRunning) return;
-
-  isRunning = true;
-
-  handleNewPage();
-
+  path = location.pathname;
   cleanSearchResults();
+  if (SETTINGS.redirectHomepage) redirectHomepage();
+  if (SETTINGS.redirectShortsPlayer) redirectShortsPlayer();
   if (SETTINGS.hideShorts) hideShortsVideos();
   if (SETTINGS.skipAds) skipVideoAds();
   if (SETTINGS.hideRelatedVideos) disableRelatedAutoPlay();
   if (SETTINGS.disablePlaylistAutoPlay) disablePlaylistAutoPlay();
-
-  frameRequested = false;
-  isRunning = false;
-  requestRunDynamicSettings();
 }
-
-function requestRunDynamicSettings() {
-  if (isRunning || frameRequested) return;
-  frameRequested = true;
-  setTimeout(runDynamicSettings, TIMEOUT);
-}
-
-
-/***** Features *****/
 
 function redirectHomepage() {
   if (path == '/') {
@@ -252,7 +217,7 @@ function hideShortsVideos() {
       link.closest('ytm-item-section-renderer')?.remove();
     });
   }
-  // Hide shorts on the results page
+  // Hide shorts on search result pages
   if (path.startsWith('/results')) {
     shortsLinks.forEach(link => {
       // For desktop
@@ -260,7 +225,7 @@ function hideShortsVideos() {
       link.closest('ytd-reel-shelf-renderer')?.remove();
       // For mobile
       link.closest('ytm-reel-shelf-renderer')?.remove();
-      link.closest('ytm-media-item')?.remove();
+      link.closest('ytm-video-with-context-renderer')?.remove();
     });
   }
   // Hide shorts on channel page
