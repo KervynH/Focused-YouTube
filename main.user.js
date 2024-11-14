@@ -39,6 +39,7 @@ const SETTINGS = {
 
   /// misc ///
   hideSearchButton: false,
+  cleanSearchResults: true,
 };
 
 // Mark settings in HTML
@@ -127,24 +128,23 @@ if (location.hostname.startsWith('m.')) {
 }
 
 // Start running dynamic settings
-var path = location.pathname;
-setInterval(runDynamicSettings, 100);
+runDynamicSettings();
 
 
 /***** Functions *****/
 
 function runDynamicSettings() {
-  path = location.pathname;
-  cleanSearchResults();
   if (SETTINGS.redirectHomepage) redirectHomepage();
   if (SETTINGS.redirectShortsPlayer) redirectShortsPlayer();
   if (SETTINGS.hideShorts) hideShortsVideos();
+  if (SETTINGS.cleanSearchResults) cleanSearchResults();
   if (SETTINGS.skipAds) skipVideoAds();
   if (SETTINGS.hideRelatedVideos) disableRelatedAutoPlay();
+  setTimeout(runDynamicSettings, 500);
 }
 
 function redirectHomepage() {
-  if (path == '/') {
+  if (location.pathname == '/') {
     if (SETTINGS.redirectHomepage == 'wl') {
       location.replace('/playlist/?list=WL');
     }
@@ -158,8 +158,8 @@ function redirectHomepage() {
 }
 
 function redirectShortsPlayer() {
-  if (path.startsWith('/shorts')) {
-    const redirPath = path.replace('shorts', 'watch');
+  if (location.pathname.startsWith('/shorts')) {
+    const redirPath = location.pathname.replace('shorts', 'watch');
     location.replace(redirPath);
   }
 }
@@ -183,7 +183,7 @@ function disableRelatedAutoPlay() {
 
 function hideShortsVideos() {
   const shortsLinks = document.querySelectorAll('a[href^="/shorts"]');
-  if (path == '/feed/subscriptions') {
+  if (location.pathname == '/feed/subscriptions') {
     shortsLinks.forEach(link => {
       // For desktop
       link.closest('ytd-rich-item-renderer')?.remove();
@@ -192,7 +192,7 @@ function hideShortsVideos() {
     });
   }
   // Hide shorts on search result pages
-  if (path.startsWith('/results')) {
+  if (location.pathname.startsWith('/results')) {
     shortsLinks.forEach(link => {
       // For desktop
       link.closest('ytd-video-renderer')?.remove();
@@ -203,7 +203,7 @@ function hideShortsVideos() {
     });
   }
   // Hide shorts on channel page
-  if (path.startsWith('/@')) {
+  if (location.pathname.startsWith('/@')) {
     // remove shorts tab
     document.querySelectorAll('div.tab-content')?.forEach(tab => {
       if (tab.innerText == "SHORTS") tab.parentElement.remove(); // desktop
@@ -220,7 +220,7 @@ function hideShortsVideos() {
 }
 
 function skipVideoAds() {
-  if (path.startsWith('/watch')) {
+  if (location.pathname.startsWith('/watch')) {
     // click "skip ad" button if it exists
     // during the first 5s, th button is not clickable in UI, but it's clickable in console
     const adSkipButton = document.querySelector(".ytp-ad-skip-button-slot button,.ytp-ad-overlay-close-button");
@@ -239,7 +239,7 @@ function skipVideoAds() {
 }
 
 function cleanSearchResults() {
-  if (path.startsWith('/results')) {
+  if (location.pathname.startsWith('/results')) {
     // Mobile
     const badges = document.querySelectorAll('ytm-badge');
     badges.forEach(badge => {
