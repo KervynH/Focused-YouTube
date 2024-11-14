@@ -33,7 +33,6 @@ const SETTINGS = {
   hidePlayNextButton: true,
   hidePlayPreviousButton: true,
   hideMiniPlayerButton: true,
-  disablePlaylistAutoPlay: true,
 
   /// shorts ///
   hideShorts: true,
@@ -142,7 +141,6 @@ function runDynamicSettings() {
   if (SETTINGS.hideShorts) hideShortsVideos();
   if (SETTINGS.skipAds) skipVideoAds();
   if (SETTINGS.hideRelatedVideos) disableRelatedAutoPlay();
-  if (SETTINGS.disablePlaylistAutoPlay) disablePlaylistAutoPlay();
 }
 
 function redirectHomepage() {
@@ -181,30 +179,6 @@ function disableRelatedAutoPlay() {
       e.click();
     }
   });
-}
-
-function disablePlaylistAutoPlay() {
-  if (path.startsWith('/watch')) {
-    var script = document.createElement("script");
-    script.id = "npafy-script";
-    script.type = "text/javascript";
-    script.innerText = [
-      "(function() {",
-      "	var ypm;",
-      "	function noAutoAdvance() {",
-      "		if (!ypm) {",
-      "			ypm = document.getElementsByTagName('yt-playlist-manager')[0];",
-      "		}",
-      "		if (ypm) {",
-      "			ypm.canAutoAdvance_ = false;",
-      "		}",
-      "	}",
-      "	noAutoAdvance();",
-      "	setInterval(noAutoAdvance, 100);",
-      "})();"
-    ].join("\n");
-    document.body.appendChild(script);
-  }
 }
 
 function hideShortsVideos() {
