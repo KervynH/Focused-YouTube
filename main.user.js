@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Focused YouTube
-// @version      2024-09-05
+// @version      2024-11-13
 // @author       Kervyn
 // @namespace    https://raw.githubusercontent.com/KervynH/Focused-YouTube/main/main.user.js
 // @description  Remove ads, shorts, and algorithmic suggestions on YouTube
@@ -30,9 +30,8 @@ const SETTINGS = {
   skipAds: true,
   hideLiveChat: true,
   hideRelatedVideos: true,
-  hidePlayNextButton: true,
-  hidePlayPreviousButton: true,
   hideMiniPlayerButton: true,
+  hidePlayNextButton: true,
 
   /// shorts ///
   hideShorts: true,
@@ -75,8 +74,8 @@ const DESKTOP_BLOCK_LIST = [
   // Homepage 
   'html[hideHomepageButton="true"] a:not(#logo)[href="/"]',
   'html[hideAllSuggestions="true"] ytd-browse[page-subtype="home"]',
-  'html[hideAllButOneRow="true"] ytd-browse[page-subtype="home"] ytd-rich-grid-renderer>#contents>ytd-rich-grid-row:nth-child(n+2)',
   'html[hideAllButOneRow="true"] ytd-browse[page-subtype="home"] #header',
+  'html[hideAllButOneRow="true"] ytd-browse[page-subtype="home"] ytd-rich-grid-renderer>#contents>ytd-rich-grid-row:nth-child(n+2)',
   'html[hideInfiniteScroll="true"] ytd-browse[page-subtype="home"] ytd-rich-grid-renderer>#contents>ytd-continuation-item-renderer',
 
   // Video Player
@@ -84,7 +83,7 @@ const DESKTOP_BLOCK_LIST = [
   'html[hideRelatedVideos="true"] #related',
   'html[hideRelatedVideos="true"] .html5-endscreen',
   'html[hidePlayNextButton="true"] a.ytp-next-button.ytp-button',
-  'html[hidePlayPreviousButton="true"] a.ytp-prev-button.ytp-button',
+  'html[hidePlayNextButton="true"] a.ytp-prev-button.ytp-button',
   'html[hideChat="true"] #chat',
   'html[hideMiniPlayerButton="true"] .ytp-button.ytp-miniplayer-button',
   // '#movie_player button.ytp-button.ytp-share-button',
@@ -111,14 +110,15 @@ const MOBILE_BLOCK_LIST = [
 
   // Video Player 
   'html[hideRelatedVideos="true"] ytm-item-section-renderer[section-identifier="related-items"]>lazy-list',
-  'html[hidePlayPreviousButton="true"] .player-controls-middle-core-buttons>button:nth-child(1)',
-  'html[hidePlayNextButton="true"] .player-controls-middle-core-buttons>button:nth-child(5)',
+  'html[hidePlayNextButton="true"] .player-controls-middle-core-buttons > div:nth-child(1)',
+  'html[hidePlayNextButton="true"] .player-controls-middle-core-buttons > div:nth-child(5)',
 
   // Navigation Bar 
   'html[hideHomepageButton="true"] ytm-pivot-bar-item-renderer:nth-child(1)',
   'html[hideShorts="true"] ytm-pivot-bar-item-renderer:nth-child(2)',
   'ytm-chip-cloud-chip-renderer[chip-style="STYLE_EXPLORE_LAUNCHER_CHIP"]',
 ];
+
 if (location.hostname.startsWith('www.')) {
   DESKTOP_BLOCK_LIST.forEach(e => GM.addStyle(`${e} {display: none !important}`));
 }
