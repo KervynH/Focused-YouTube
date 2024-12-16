@@ -1,13 +1,12 @@
 // ==UserScript==
 // @name         Focused YouTube
-// @version      2024-11-13
+// @version      2024-12-15
 // @author       Kervyn
 // @namespace    https://raw.githubusercontent.com/KervynH/Focused-YouTube/main/main.user.js
 // @description  Remove ads, shorts, and algorithmic suggestions on YouTube
 // @match        *://*.youtube.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
-// @run-at       document-end
-// @grant        GM.addStyle
+// @run-at       document-start
 // ==/UserScript==
 
 /* Credit:  https://github.com/lawrencehook/remove-youtube-suggestions */
@@ -61,13 +60,12 @@ const DESKTOP_BLOCK_LIST = [
 
   // Shorts
   'html[hideShorts="true"] ytd-rich-section-renderer',
-  'html[hideShorts="true"] a[title="Shorts"]',
   'html[hideShorts="true"] ytd-reel-shelf-renderer',
 
   // Left Bar Navigation 
   'a[href="/feed/trending"]',
   'a[href="/feed/explore"]',
-  'html[hideShorts="true"] a[title="Shorts"]',
+  'html[hideShorts="true"] ytd-guide-section-renderer a[title="Shorts"]',
   'html[hideShorts="true"] ytd-mini-guide-entry-renderer[aria-label="Shorts"]',
   'ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(4)',
   'ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3)',
@@ -120,11 +118,19 @@ const MOBILE_BLOCK_LIST = [
   'ytm-chip-cloud-chip-renderer[chip-style="STYLE_EXPLORE_LAUNCHER_CHIP"]',
 ];
 
+function addStyle(css) {
+  const style = document.createElement('style');
+  style.textContent = css;
+  document.head.appendChild(style);
+}
+
 if (location.hostname.startsWith('www.')) {
-  DESKTOP_BLOCK_LIST.forEach(e => GM.addStyle(`${e} {display: none !important}`));
+  const styles = DESKTOP_BLOCK_LIST.map(e => `${e} {display: none !important}`).join('\n');
+  addStyle(styles);
 }
 if (location.hostname.startsWith('m.')) {
-  MOBILE_BLOCK_LIST.forEach(e => GM.addStyle(`${e} {display: none !important}`));
+  const styles = MOBILE_BLOCK_LIST.map(e => `${e} {display: none !important}`).join('\n');
+  addStyle(styles);
 }
 
 // Start running dynamic settings
