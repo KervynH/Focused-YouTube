@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Focused YouTube
-// @version      2024-12-15
+// @version      2024-12-16
 // @author       Kervyn
 // @namespace    https://raw.githubusercontent.com/KervynH/Focused-YouTube/main/main.user.js
 // @description  Remove ads, shorts, and algorithmic suggestions on YouTube
@@ -61,6 +61,7 @@ const DESKTOP_BLOCK_LIST = [
   // Shorts
   'html[hideShorts="true"] ytd-rich-section-renderer',
   'html[hideShorts="true"] ytd-reel-shelf-renderer',
+  'html[hideShorts="true"] ytd-shelf-renderer',
 
   // Left Bar Navigation 
   'a[href="/feed/trending"]',
@@ -92,8 +93,6 @@ const DESKTOP_BLOCK_LIST = [
   // Search
   'div.sbdd_a',
   '#container.ytd-search ytd-search-pyv-renderer',
-  '#container.ytd-search ytd-reel-shelf-renderer',
-  '#container.ytd-search ytd-shelf-renderer',
   'html[hideSearchButton="true"] div.ytd-masthead>ytd-searchbox',
   'html[hideSearchButton="true"] div.ytd-masthead>#voice-search-button',
 ];
@@ -106,6 +105,9 @@ const MOBILE_BLOCK_LIST = [
   'html[hideHomepageButton="true"] div[tab-identifier="FEwhat_to_watch"]',
   'html[hideSearchButton="true"] #header-bar > header > div > button',
   'html[hideSearchButton="true"] #center.style-scope.ytd-masthead',
+
+  // Shorts in search results
+  'html[hideShorts="true"] ytm-reel-shelf-renderer.item',
 
   // Video Player 
   'html[hideRelatedVideos="true"] ytm-item-section-renderer[section-identifier="related-items"]>lazy-list',
@@ -142,7 +144,7 @@ runDynamicSettings();
 function runDynamicSettings() {
   if (SETTINGS.redirectHomepage) redirectHomepage();
   if (SETTINGS.redirectShortsPlayer) redirectShortsPlayer();
-  if (SETTINGS.hideShorts) hideShortsVideos();
+  // if (SETTINGS.hideShorts) hideShortsVideos();
   if (SETTINGS.cleanSearchResults) cleanSearchResults();
   if (SETTINGS.skipAds) skipVideoAds();
   if (SETTINGS.hideRelatedVideos) disableRelatedAutoPlay();
@@ -202,25 +204,17 @@ function hideShortsVideos() {
     shortsLinks.forEach(link => {
       // For desktop
       link.closest('ytd-video-renderer')?.remove();
-      link.closest('ytd-reel-shelf-renderer')?.remove();
       // For mobile
-      link.closest('ytm-reel-shelf-renderer')?.remove();
       link.closest('ytm-video-with-context-renderer')?.remove();
     });
   }
-  // Hide shorts on channel page
+  // Hide the "shorts" tab on channel page
   if (location.pathname.startsWith('/@')) {
-    // remove shorts tab
     document.querySelectorAll('div.tab-content')?.forEach(tab => {
       if (tab.innerText == "SHORTS") tab.parentElement.remove(); // desktop
     });
     document.querySelectorAll('a[role="tab"]')?.forEach(tab => {
       if (tab.innerText == 'SHORTS') tab.remove(); // mobile
-    });
-    // remove shorts shelf
-    document.querySelectorAll('a[href^="/shorts"]')?.forEach(link => {
-      link.closest('ytm-reel-shelf-renderer.item')?.remove(); // mobile
-      link.closest('ytd-reel-shelf-renderer')?.remove(); // desktop
     });
   }
 }
