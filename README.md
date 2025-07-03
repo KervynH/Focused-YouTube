@@ -2,13 +2,15 @@
 
 This is a user-script that reduces distractions on YouTube.
 
+**Note**: This project is now archived and no longer maintained, as I’ve switched to using the [Unhook browser extension](https://chromewebstore.google.com/detail/unhook-remove-youtube-rec/khncfooichmfjbepaaaebmommgaepoid), which offers the same functionality as this project.
+
 ## Installation
 
 With a script manager such as tampermonkey, [click here](https://raw.githubusercontent.com/KervynH/Focused-YouTube/main/main.user.js) to install.
 
 ## Features
 
-- Remove or simplify homepage
+- Remove homepage suggestions
 - Redirect homepage to "watch later", or "subscriptions", or "library"
 - Remove all shorts in feed and redirect shorts to normal player
 - Remove all algorithmic suggestions
