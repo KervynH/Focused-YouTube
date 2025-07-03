@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Focused YouTube
-// @version      2024-12-16
+// @version      2025-07-03
 // @author       Kervyn
 // @namespace    https://raw.githubusercontent.com/KervynH/Focused-YouTube/main/main.user.js
 // @description  Remove ads, shorts, and algorithmic suggestions on YouTube
@@ -18,12 +18,7 @@ const SETTINGS = {
   /// homepage redirect ///
   // redirectHomepage Options: 'wl', 'subs', 'lib', false
   redirectHomepage: 'wl',
-  hideHomepageButton: true,
-
-  /// homepage suggestions ///
-  hideAllSuggestions: false,
-  hideAllButOneRow: true,
-  hideInfiniteScroll: true,
+  hideHomepage: true,
 
   /// video player ///
   skipAds: true,
@@ -72,11 +67,8 @@ const DESKTOP_BLOCK_LIST = [
   'ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3)',
 
   // Homepage 
-  'html[hideHomepageButton="true"] a:not(#logo)[href="/"]',
-  'html[hideAllSuggestions="true"] ytd-browse[page-subtype="home"]',
-  'html[hideAllButOneRow="true"] ytd-browse[page-subtype="home"] #header',
-  'html[hideAllButOneRow="true"] ytd-browse[page-subtype="home"] ytd-rich-grid-renderer>#contents>ytd-rich-grid-row:nth-child(n+2)',
-  'html[hideInfiniteScroll="true"] ytd-browse[page-subtype="home"] ytd-rich-grid-renderer>#contents>ytd-continuation-item-renderer',
+  'html[hideHomepage="true"] a:not(#logo)[href="/"]',
+  'html[hideHomepage="true"] ytd-browse[page-subtype="home"]',
 
   // Video Player
   'html[hideRelatedVideos="true"] #secondary>div.circle',
