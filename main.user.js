@@ -102,7 +102,7 @@ const MOBILE_BLOCK_LIST = [
   'ytm-promoted-sparkles-web-renderer',
 
   // Homepage 
-  'html[hideHomepageButton="true"] div[tab-identifier="FEwhat_to_watch"]',
+  'html[hideHomepage="true"] div[tab-identifier="FEwhat_to_watch"]',
   'html[hideSearchButton="true"] #header-bar > header > div > button',
   'html[hideSearchButton="true"] #center.style-scope.ytd-masthead',
 
@@ -115,7 +115,7 @@ const MOBILE_BLOCK_LIST = [
   'html[hidePlayNextButton="true"] .player-controls-middle-core-buttons > div:nth-child(5)',
 
   // Navigation Bar 
-  'html[hideHomepageButton="true"] ytm-pivot-bar-item-renderer:nth-child(1)',
+  'html[hideHomepage="true"] ytm-pivot-bar-item-renderer:nth-child(1)',
   'html[hideShorts="true"] ytm-pivot-bar-item-renderer:nth-child(2)',
   'ytm-chip-cloud-chip-renderer[chip-style="STYLE_EXPLORE_LAUNCHER_CHIP"]',
 ];
@@ -144,11 +144,11 @@ runDynamicSettings();
 function runDynamicSettings() {
   if (SETTINGS.redirectHomepage) redirectHomepage();
   if (SETTINGS.redirectShortsPlayer) redirectShortsPlayer();
-  // if (SETTINGS.hideShorts) hideShortsVideos();
+  if (SETTINGS.hideShorts) hideShortsVideos();
   if (SETTINGS.cleanSearchResults) cleanSearchResults();
   if (SETTINGS.skipAds) skipVideoAds();
   if (SETTINGS.hideRelatedVideos) disableRelatedAutoPlay();
-  setTimeout(runDynamicSettings, 500);
+  setTimeout(runDynamicSettings, 1000);
 }
 
 function redirectHomepage() {
@@ -194,7 +194,7 @@ function hideShortsVideos() {
   if (location.pathname == '/feed/subscriptions') {
     shortsLinks.forEach(link => {
       // For desktop
-      link.closest('ytd-rich-item-renderer')?.remove();
+      link.closest('ytd-video-renderer')?.remove();
       // For mobile
       link.closest('ytm-item-section-renderer')?.remove();
     });
