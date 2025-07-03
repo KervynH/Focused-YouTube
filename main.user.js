@@ -6,7 +6,7 @@
 // @description  Remove ads, shorts, and algorithmic suggestions on YouTube
 // @match        *://*.youtube.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
-// @run-at       document-start
+// @run-at       document-body
 // ==/UserScript==
 
 /* Credit:  https://github.com/lawrencehook/remove-youtube-suggestions */
