@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         Focused YouTube
-// @version      2025-07-03
+// @version      2025-11-18
 // @author       Kervyn
-// @namespace    https://raw.githubusercontent.com/KervynH/Focused-YouTube/main/main.user.js
 // @description  Remove ads, shorts, and algorithmic suggestions on YouTube
-// @match        *://*.youtube.com/*
+// @namespace    https://raw.githubusercontent.com/KervynH/Focused-YouTube/main/main.user.js
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
-// @run-at       document-body
+// @match        *://*.youtube.com/*
+// @run-at       document-start
 // ==/UserScript==
 
 /* Credit:  https://github.com/lawrencehook/remove-youtube-suggestions */
@@ -42,7 +42,7 @@ Object.keys(SETTINGS).forEach(key => {
   HTML.setAttribute(key, SETTINGS[key]);
 });
 
-// Add css to remove unnecessary elements
+// CSS selectors of elements to block
 const DESKTOP_BLOCK_LIST = [
   // Ads 
   '#masthead-ad',
@@ -76,7 +76,7 @@ const DESKTOP_BLOCK_LIST = [
   'html[hideRelatedVideos="true"] .html5-endscreen',
   'html[hidePlayNextButton="true"] a.ytp-next-button.ytp-button',
   'html[hidePlayNextButton="true"] a.ytp-prev-button.ytp-button',
-  'html[hideChat="true"] #chat',
+  'html[hideLiveChat="true"] #chat',
   'html[hideMiniPlayerButton="true"] .ytp-button.ytp-miniplayer-button',
   // '#movie_player button.ytp-button.ytp-share-button',
   // '#movie_player button.ytp-button.ytp-watch-later-button',
@@ -88,6 +88,7 @@ const DESKTOP_BLOCK_LIST = [
   'html[hideSearchButton="true"] div.ytd-masthead>ytd-searchbox',
   'html[hideSearchButton="true"] div.ytd-masthead>#voice-search-button',
 ];
+
 const MOBILE_BLOCK_LIST = [
   // Ads 
   'ytm-companion-ad-renderer',
@@ -112,34 +113,42 @@ const MOBILE_BLOCK_LIST = [
   'ytm-chip-cloud-chip-renderer[chip-style="STYLE_EXPLORE_LAUNCHER_CHIP"]',
 ];
 
-function addStyle(css) {
-  const style = document.createElement('style');
-  style.textContent = css;
-  document.head.appendChild(style);
-}
-
+// Add CSS to block elements
+let css = '';
 if (location.hostname.startsWith('www.')) {
-  const styles = DESKTOP_BLOCK_LIST.map(e => `${e} {display: none !important}`).join('\n');
-  addStyle(styles);
+  css = DESKTOP_BLOCK_LIST.map(e => `${e} {display: none !important}`).join('\n');
 }
 if (location.hostname.startsWith('m.')) {
-  const styles = MOBILE_BLOCK_LIST.map(e => `${e} {display: none !important}`).join('\n');
-  addStyle(styles);
+  css = MOBILE_BLOCK_LIST.map(e => `${e} {display: none !important}`).join('\n');
 }
+const style = document.createElement('style');
+style.textContent = css;
+document.head.appendChild(style);
+
+// Track last processed URL
+let lastUrl = null;
 
 // Start running dynamic settings
 runDynamicSettings();
 
 
-/***** Functions *****/
+///// Dynamic Settings Functions /////
 
 function runDynamicSettings() {
-  if (SETTINGS.redirectHomepage) redirectHomepage();
-  if (SETTINGS.redirectShortsPlayer) redirectShortsPlayer();
-  if (SETTINGS.hideShorts) hideShortsVideos();
-  if (SETTINGS.cleanSearchResults) cleanSearchResults();
-  if (SETTINGS.skipAds) skipVideoAds();
-  if (SETTINGS.hideRelatedVideos) disableRelatedAutoPlay();
+  const currentUrl = location.href;
+
+  // Only run logic when URL actually changes
+  if (currentUrl !== lastUrl) {
+    lastUrl = currentUrl;
+
+    if (SETTINGS.redirectHomepage) redirectHomepage();
+    if (SETTINGS.redirectShortsPlayer) redirectShortsPlayer();
+    if (SETTINGS.hideShorts) hideShortsVideos();
+    if (SETTINGS.cleanSearchResults) cleanSearchResults();
+    if (SETTINGS.skipAds) skipVideoAds();
+    if (SETTINGS.hideRelatedVideos) disableRelatedAutoPlay();
+  }
+
   setTimeout(runDynamicSettings, 1000);
 }
 
