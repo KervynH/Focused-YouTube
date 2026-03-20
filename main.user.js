@@ -114,16 +114,19 @@ const MOBILE_BLOCK_LIST = [
 ];
 
 // Add CSS to block elements
-let css = '';
-if (location.hostname.startsWith('www.')) {
-  css = DESKTOP_BLOCK_LIST.map(e => `${e} {display: none !important}`).join('\n');
-}
-if (location.hostname.startsWith('m.')) {
-  css = MOBILE_BLOCK_LIST.map(e => `${e} {display: none !important}`).join('\n');
-}
-const style = document.createElement('style');
-style.textContent = css;
-document.head.appendChild(style);
+document.addEventListener('DOMContentLoaded', evt => { // Ivan-Khar: Fixes "document.head is null" error
+  let css = '';
+  if (location.hostname.startsWith('www.')) {
+    css = DESKTOP_BLOCK_LIST.map(e => `${e} {display: none !important}`).join('\n');
+  }
+  if (location.hostname.startsWith('m.')) {
+    css = MOBILE_BLOCK_LIST.map(e => `${e} {display: none !important}`).join('\n');
+  }
+  const style = document.createElement('style');
+  style.textContent = css;
+
+  document.head.appendChild(style);
+});
 
 // Track last processed URL
 let lastUrl = null;
