@@ -34,6 +34,8 @@ const SETTINGS = {
   /// misc ///
   hideSearchButton: false,
   cleanSearchResults: true,
+  hideComments: false,
+  hideNotifications: false,
 };
 
 // Mark settings in HTML
@@ -78,6 +80,7 @@ const DESKTOP_BLOCK_LIST = [
   'html[hidePlayNextButton="true"] a.ytp-prev-button.ytp-button',
   'html[hideLiveChat="true"] #chat',
   'html[hideMiniPlayerButton="true"] .ytp-button.ytp-miniplayer-button',
+  'html[hideComments="true"] ytd-comments#comments',
   // '#movie_player button.ytp-button.ytp-share-button',
   // '#movie_player button.ytp-button.ytp-watch-later-button',
   '.ytd-download-button-renderer.style-scope',
@@ -87,6 +90,7 @@ const DESKTOP_BLOCK_LIST = [
   '#container.ytd-search ytd-search-pyv-renderer',
   'html[hideSearchButton="true"] div.ytd-masthead>ytd-searchbox',
   'html[hideSearchButton="true"] div.ytd-masthead>#voice-search-button',
+  'html[hideNotifications="true"] ytd-notification-topbar-button-renderer',
 ];
 
 const MOBILE_BLOCK_LIST = [
