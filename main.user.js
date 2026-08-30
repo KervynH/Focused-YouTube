@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Focused YouTube
-// @version      2025-11-18
+// @version      2026-8-30
 // @author       Kervyn
 // @description  Remove ads, shorts, and algorithmic suggestions on YouTube
 // @namespace    https://raw.githubusercontent.com/KervynH/Focused-YouTube/main/main.user.js
