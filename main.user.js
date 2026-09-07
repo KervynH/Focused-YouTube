@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name           Focused YouTube
-// @version        2026-8-30
-// @author         Kervyn
-// @description    Remove ads, shorts, and algorithmic suggestions on YouTube
-// @namespace      https://raw.githubusercontent.com/KervynH/Focused-YouTube/main/main.user.js
-// @icon           https://www.google.com/s2/favicons?sz=64&domain=youtube.com
-// @match          *://*.youtube.com/*
-// @exclude-match  *://music.youtube.com/*
-// @exclude-match  *://studio.youtube.com/*
-// @run-at         document-start
+// @name         Focused YouTube
+// @version      2026-8-30
+// @author       Kervyn
+// @description  Remove ads, shorts, and algorithmic suggestions on YouTube
+// @namespace    https://raw.githubusercontent.com/KervynH/Focused-YouTube/main/main.user.js
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
+// @match        *://*.youtube.com/*
+// @exclude      *://music.youtube.com/*
+// @exclude      *://studio.youtube.com/*
+// @run-at       document-start
 // ==/UserScript==
 
 /* Credit:  https://github.com/lawrencehook/remove-youtube-suggestions */
