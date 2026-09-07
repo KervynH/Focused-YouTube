@@ -6,6 +6,8 @@
 // @namespace    https://raw.githubusercontent.com/KervynH/Focused-YouTube/main/main.user.js
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        *://*.youtube.com/*
+// @exclude      *://music.youtube.com/*
+// @exclude      *://studio.youtube.com/*
 // @run-at       document-start
 // ==/UserScript==
 
